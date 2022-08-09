@@ -1,0 +1,60 @@
+@startuml
+
+hide empty members
+
+title Project Domain Model
+
+rectangle "Database" {
+  class category {
+    categoryId
+    people[]::peopleId
+    question::string
+  }
+
+  class person {
+    peopleId
+    name::string
+  }
+
+  class allCategory <<singleton>> {
+  }
+
+  allCategory -right-|> category : "             "
+
+  category "1..n" -right- "1..n" person : "               "
+}
+
+rectangle "In memory" {
+  class session {
+    sessionId
+    categoryQuery[]
+    activePeople[]::peopleId
+    askQuestion()::question
+    answerQuestion(answer::boolean)
+  }
+
+  class activeCategory {
+    categoryId
+    activePeople[]::peopleId
+    recalculate()
+  }
+
+  session "1" *-right- "*" activeCategory  : "              "
+}
+
+session .up..> "1..n" person
+activeCategory .up..> "1" category
+activeCategory .up..> "1..n" person
+
+' class activeCategory {
+'   isActive::bool
+'   refreshPeopleCount()
+'   status
+'   numPeople::integer
+' }
+
+' class personStatus {
+'   isActive::bool
+' }
+
+@enduml
