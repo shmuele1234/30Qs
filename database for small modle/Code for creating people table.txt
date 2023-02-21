@@ -1,0 +1,19 @@
+CREATE TABLE people (
+      person_id INTEGER AUTO_INCREMENT PRIMARY KEY ,
+      name TEXT NOT NULL
+      );
+      
+
+INSERT INTO people (name) VALUES 
+('Genghis Khan'),
+('Leonardo da Vinci'),
+('Joseph Stalin'),
+('Alexander the Great'),
+('Benedictus de Spinoza'),
+('David'),
+('Theodor Herzl'),
+('Pablo Escobar'),
+('Aristotle'),
+('Albert Einstein');
+
+SELECT * FROM people;

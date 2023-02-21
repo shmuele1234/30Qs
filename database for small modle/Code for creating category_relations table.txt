@@ -1,0 +1,36 @@
+CREATE TABLE category_relations (
+    category_id INT AUTO_INCREMENT PRIMARY KEY,
+    category_name TEXT,
+    monarch INT,
+    military_leader INT,
+    poet INT,
+    politician INT,
+    philosopher INT,
+    writer INT,
+    physicist INT,
+    century_19 INT,
+    atheism INT,
+    judaism INT,
+    asia INT,
+    europe INT
+
+    FOREIGN KEY(category_id) REFERENCES categories (category_id) ON DELETE CASCADE 
+);
+
+INSERT INTO category_relations (category_name, monarch, military_leader, poet, politician, philosopher, writer, physicist, century_19, atheism, judaism, asia, europe)
+VALUES 
+('monarch',	        2,  2,	1,	1,	0,	0,	1,	0,	1,	1,	1,	0),
+('military leader',	2,	1,	0,	1,	0,	0,	0,	0,	0,	1,	0,	0),
+('Asia',	          1, 	0,	1,	0,	2,	0,	0,	0,	1,	1,	1,	0),
+('Europe',	        1,	1,	0,	2,	1,	2,	2,	1,	0,	1,	1,	1),
+('atheism',	        0,	0,	2,	1,	2,	1,	1,	1,	0,	0,	1,	0),
+('writer',	        0,	0,	0,	2,	1,	1,	0,	0,	0,	1,	1,	1),
+('philosopher',	    1,	0,	0,	2,	1,	0,	2,	1,	0,	0,	0,	0),
+('physicist',	      0,  0,	0,	1,	1,	0,	1,	1,	0,	0,	1,	1),
+('poet',	          1,	0,	1,	0,	0,	0,	0,	0,	2,	1,	1,	0),
+('politician',	    1,	1,	1,	1,	0,	1,	0,	0,	1,	1,	0,	0),
+('Judaism',	        1,	0,	1,	1,	1,	1,	0,	1,	1,  0,  3,  2),
+('century_19',      0,	1,	0,	3,	1,	2,	0,	1,	0,  0,  1,  3);
+-- wrong data!!!
+
+SELECT * FROM category_relations;

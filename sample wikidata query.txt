@@ -1,0 +1,14 @@
+SELECT ?person ?personLabel ?typeOfEntityLabel ?genderLabel ?dateOfBirthLabel ?placeOfBirthLabel ?occupationLabel ?citizenshipLabel ?ethnicGroupLabel ?religionLabel
+WHERE
+{
+  VALUES ?person { wd:Q937 wd:Q44003 wd:Q187447 wd:Q855 wd:Q762 wd:Q35802 wd:Q868 wd:Q720 wd:Q41370 wd:Q8409 }
+  ?person wdt:P31 ?typeOfEntity.
+  OPTIONAL { ?person wdt:P21 ?gender. }
+  OPTIONAL { ?person wdt:P569 ?dateOfBirth. }
+  OPTIONAL { ?person wdt:P19 ?placeOfBirth. }
+  OPTIONAL { ?person wdt:P106 ?occupation. }
+  OPTIONAL { ?person wdt:P27 ?citizenship. }
+  OPTIONAL { ?person wdt:P172 ?ethnicGroup. }
+  OPTIONAL { ?person wdt:P140 ?religion. }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+}

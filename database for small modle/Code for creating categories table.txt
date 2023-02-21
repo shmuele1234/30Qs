@@ -1,0 +1,23 @@
+CREATE TABLE categories (
+      category_id INTEGER AUTO_INCREMENT PRIMARY KEY ,
+      category_name TEXT NOT NULL,
+      question TEXT NOT NULL
+      );
+      
+
+INSERT INTO categories (category_name, question) VALUES 
+('monarch', 'Is the person a monarch?'),
+('military leader', 'Is the person a military leader?'),
+('poet', 'Is the person a poet?'),
+('politician', 'Is the person a politician?'),
+('philosopher', 'Is the person a philosopher?'),
+('writer', 'Is the person a writer?'),
+('physicist', 'Is the person a physicist?'),
+('19th cent.', 'Did the person live in the 19th century?'),
+('atheism', 'Is the person an atheist?'),
+('Judaism', 'Is the person Jewish?'),
+('Asia', 'Is the person from Asia?'),
+('Europe', 'Is the person from Europe?');
+
+
+SELECT * FROM categories;
