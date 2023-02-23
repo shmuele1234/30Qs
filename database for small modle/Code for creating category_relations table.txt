@@ -1,5 +1,5 @@
 CREATE TABLE category_relations (
-    category_id INT AUTO_INCREMENT PRIMARY KEY,
+    category_id INT PRIMARY KEY,
     category_name TEXT,
     monarch INT,
     military_leader INT,
@@ -12,7 +12,7 @@ CREATE TABLE category_relations (
     atheism INT,
     judaism INT,
     asia INT,
-    europe INT
+    europe INT,
 
     FOREIGN KEY(category_id) REFERENCES categories (category_id) ON DELETE CASCADE 
 );
