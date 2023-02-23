@@ -31,6 +31,6 @@ VALUES
 (9, 'Aristotle',	           1,	0,	1,	0,	0,	0,	0,	0,	2,	1,	1,	0),
 (10, 'Albert Einstein',	     1,	1,	1,	1,	0,	1,	0,	0,	1,	1,	0,	0);
 
--- wrong data!!!
+-- wrong data ones and zeros only!!!
 
 SELECT * FROM peoples_categories;
