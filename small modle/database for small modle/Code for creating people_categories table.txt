@@ -1,0 +1,19 @@
+CREATE TABLE people_categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    person_name VARCHAR(50),
+    monarch BOOLEAN,
+    military_leader BOOLEAN,
+    poet BOOLEAN,
+    politician BOOLEAN,
+    philosopher BOOLEAN,
+    writer BOOLEAN,
+    physicist BOOLEAN,
+    century_19 BOOLEAN,
+    atheism BOOLEAN,
+    judaism BOOLEAN,
+    asia BOOLEAN,
+    europe BOOLEAN
+
+FOREIGN KEY (person_id) REFERENCES people (person_id) ON DELETE CASCADE; 
+);
+

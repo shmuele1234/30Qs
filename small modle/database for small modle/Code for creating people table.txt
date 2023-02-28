@@ -1,6 +1,6 @@
 CREATE TABLE people (
       person_id INTEGER AUTO_INCREMENT PRIMARY KEY ,
-      name TEXT NOT NULL
+      name VARCHAR(50) NOT NULL
       );
       
 
