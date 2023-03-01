@@ -2,23 +2,25 @@ import java.util.*;
 
 public class basicSession {
 
-    private static int numOfCategories; //value initialized in function not writen yet
-    private static int numOfPeople; //value initialized in function not writen yet
-    private static int[] askedQuestions = new int[numOfCategories];
+    private static final int numOfCategories; //value initialized in function not writen yet; the number of total categories
+    private static final int numOfPeople; //value initialized in function not writen yet; the number of total people
+    private static int numOfActivePeople = numOfPeople; //number of people that have not been ruled out yet
+    private static int[] askedQuestions = new int[numOfCategories]; // an array contaning the ids of all the asked questions 
     private static int numOfAskedQuestions = 0;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
 
         boolean[][] people_categoriesTable = new boolean[numOfCategories][numOfPeople]; //this connects to people_categories table in the database
         String[] categoryName = new String[numOfCategories]; //this connects to categories table in the database; for debug only. no use in the code
         String[] categoryQuestion = new String[numOfCategories]; //this connects categories table in the database
-        String[] personName =new String[numOfPeople]; //this connects to people table in the database
+        String[] personName = new String[numOfPeople]; //this connects to people table in the database
         //the index of all these arrays, is the id of the person or category accordingly 
 
-        while (numOfPeople>1) {//argument that means that only one person remains 
+        while (numOfActivePeople>1) {//argument that means that only one person remains 
+            printCurrentStatus(people_categoriesTable, categoryName, personName, numOfActivePeople, askedQuestions, numOfAskedQuestions); //for debug. no use in code
+
             if (numOfAskedQuestions == numOfCategories){
-                //give an error that the person has not been found
-                return;
+                throw new Exception ("Could not find person"); //give an exception that the person has not been found
             }
             int idOfBestQuestion = findBest(people_categoriesTable);
             boolean userAnswerIsPositive = askQuestion(categoryQuestion[idOfBestQuestion]);
@@ -34,7 +36,7 @@ public class basicSession {
         int j = 0; //the id of the person
         int i = 0; //the id of the category
 
-        for (; j<people_categoriesTable[i].length; j++){
+        for (; j<people_categoriesTable[i].length; j++){ //finds a person with a still active category
 
             for (; i<people_categoriesTable.length; i++){
                 if (people_categoriesTable[i][j])
@@ -45,12 +47,12 @@ public class basicSession {
         return j;
     }
 
-    public static boolean askQuestion(String quest){
+    public static boolean askQuestion(String quest){ //user interface 
         Scanner scn = new Scanner(System.in);
         while (true) {
             System.out.println(quest);
-        String b =scn.next();
-        switch (b) {
+        String answer = scn.next();
+        switch (answer) {
             case "y":
                 return true;
 
@@ -66,35 +68,43 @@ public class basicSession {
     }
 
     public static int findBest(boolean[][] personStatusOnCategory){ //first box indicates the category_id and the second box indicates the person_id
-        int[] total = new int[numOfCategories]; //the total of active people in a category; length of first box
+        int[] total = new int[numOfCategories]; //the total of active people in a category; the index is the category_id
 
-        for (int i = 0; i<total.length; i++) {
+        for (int i = 0; i<total.length; i++) {//i indexes the category_id
             total[i] = 0;
 
-            for (int j = 0; j<personStatusOnCategory[i].length; j++){ //length of second box
+            for (int j = 0; j<personStatusOnCategory[i].length; j++){ //j indexes the person_id
             if (personStatusOnCategory[i][j])
-                total[i]++;
+                total[i]++; //adds one to the numbering of the total of people that are in category of index i
             }
         }
 
-        return findClosesdTo50(total);
+        return findClosesdTo50(total); //returns the id of the chosen category
     }
 
     public static int findClosesdTo50(int[] arr){
-        Arrays.sort(arr);
-        
-        int i = 0;
-        while(true){
-
-            for (int j = 0; j<numOfAskedQuestions; j++) {
-                if(arr[i] != askedQuestions[j]){
-                    askedQuestions[j] = arr[i];
-                    return arr[i];
-                }
-            }
-        i++;
+        for (int i = 0; i<arr.length; i++){
+            arr[i] = Math.abs(numOfCategories/2 - arr[i]); //measures the displasment of the category from the ideal one for querying (witch is to include 50% of the people)
         }
-        /*  int min = arr[0]; 
+        
+        Arrays.sort(arr); //arranges the categories in order from most to least efctive for querying
+        
+        int i = 0; //tracks the category_id of the candidate question 
+        int j = 0; 
+
+        for (; j<numOfAskedQuestions; j++) { //the loop stops if we find a place where there is no id of a question is stored- 
+                                             //therefor category i has not been quereid upon yet and we can save in that spot the id of the chosen category
+            
+            if(arr[i] == askedQuestions[j]){ //if the question was asked:
+                i++; //check if the next efective category has been asked
+                j = 0; //start the loop over for chcking the next caregory
+            }
+        }   
+            askedQuestions[j] = i; //saves the id of the chosen category in the askedQuestions array 
+            return i; //returns the id of the chosen category
+        
+        /* alternative code, does not include checking if the question has already been asked:
+         int min = arr[0]; 
         
         int i = 0;
         for (; i < arr.length; i++) { 
@@ -106,10 +116,10 @@ public class basicSession {
         return i;*/
     }
     public static void updateData(boolean userAnswerIsPositive, boolean[][] people_categoriesTable, int idOfBestQuestion) {
-        if (userAnswerIsPositive){
+        if (userAnswerIsPositive){ //if user's answer is positive, set to false all categories of the people not associated with the asked question's category
             for (int j = 0; j<people_categoriesTable[idOfBestQuestion].length; j++){
                 if (!people_categoriesTable[idOfBestQuestion][j]){
-                    numOfPeople--;
+                    numOfActivePeople--; //decrement numOfPeople since this person is no longer relevent for us 
 
                     for (int i = 0; i<people_categoriesTable.length; i++)
                     people_categoriesTable[i][j] = false;
@@ -117,16 +127,42 @@ public class basicSession {
             }
         }
 
-        else{
+        else{ //if user's answer is negetive, set to false all categories of the people associated with the asked question's category
             for (int j = 0; j<people_categoriesTable[idOfBestQuestion].length; j++){
                 if (people_categoriesTable[idOfBestQuestion][j]){
-                    numOfPeople--;
+                    numOfActivePeople--; //decrement numOfPeople since this person is no longer relevent for us 
 
                     for (int i = 0; i<people_categoriesTable.length; i++)
-                    people_categoriesTable[i][j] = false;
+                        people_categoriesTable[i][j] = false;
                 }
             }
         }
+    }
+
+    public static void printCurrentStatus(boolean[][] people_categoriesTable, String[] categoryName, String[] personName,
+                                          int numOfActivePeople, int[] askedQuestions, int numOfAskedQuestions) { //prints all variables for debug
+        
+        System.out.print("\n      ");
+        for(int i = 0; i<categoryName.length; i++){
+            System.out.print(categoryName[i] + " ");
+        }
+        
+        int i = 0;
+        for (int j = 0; j<people_categoriesTable[i].length; j++){
+            System.out.print("\n" + personName[j] + "  ");
+            for (; i<people_categoriesTable.length; i++){
+                System.out.print(people_categoriesTable[i][j] + " ");
+            }
+        }
+
+        System.out.println("\n numOfActivePeople: " + numOfActivePeople);
+
+        System.out.println("\n numOfAskedQuestions: " + numOfAskedQuestions);
+
+        for (int j = 0; j<askedQuestions.length; j++){
+            System.out.println(categoryName[askedQuestions[j]]);
+        }
+
     }
 
 }
