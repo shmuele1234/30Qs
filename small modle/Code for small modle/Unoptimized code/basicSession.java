@@ -1,20 +1,31 @@
 import java.util.*;
+import java.sql.*;
 
 public class basicSession {
 
-    private static final int numOfCategories; //value initialized in function not writen yet; the number of total categories
-    private static final int numOfPeople; //value initialized in function not writen yet; the number of total people
+    private static int numOfCategories; //the total number of categories
+    private static int numOfPeople; //the total number of people
     private static int numOfActivePeople = numOfPeople; //number of people that have not been ruled out yet
     private static int[] askedQuestions = new int[numOfCategories]; // an array contaning the ids of all the asked questions 
     private static int numOfAskedQuestions = 0;
 
     public static void main(String[] args) throws Exception{
+        DatabaseConnection dbCon = new DatabaseConnection();
+        Connection con = dbCon.getConnection();
+
+        numOfCategories = getNumOfCategories(con);
+        numOfPeople = getnumOfPeople(con);
 
         boolean[][] people_categoriesTable = new boolean[numOfCategories][numOfPeople]; //this connects to people_categories table in the database
+        people_categoriesTable = getPeople_categoriesTable(con);
         String[] categoryName = new String[numOfCategories]; //this connects to categories table in the database; for debug only. no use in the code
+        categoryName = getCategoryName(con);
         String[] categoryQuestion = new String[numOfCategories]; //this connects categories table in the database
+        categoryQuestion = getCategoryQuestion(con);
         String[] personName = new String[numOfPeople]; //this connects to people table in the database
+        personName = getpersonName(con);
         //the index of all these arrays, is the id of the person or category accordingly 
+        dbCon.closeConnection();
 
         while (numOfActivePeople>1) {//argument that means that only one person remains 
             printCurrentStatus(people_categoriesTable, categoryName, personName, numOfActivePeople, askedQuestions, numOfAskedQuestions); //for debug. no use in code
@@ -54,17 +65,18 @@ public class basicSession {
         String answer = scn.next();
         switch (answer) {
             case "y":
+                scn.close();
                 return true;
 
             case "n":
+                scn.close();
                 return false;
 
             default:
                 System.out.println("invalid input");
                 break;
         }
-        }
-        
+        } 
     }
 
     public static int findBest(boolean[][] personStatusOnCategory){ //first box indicates the category_id and the second box indicates the person_id
@@ -163,6 +175,78 @@ public class basicSession {
             System.out.println(categoryName[askedQuestions[j]]);
         }
 
+    }
+
+    public static int getNumOfCategories(Connection con) throws SQLException{
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * categories ORDER BY category_id DESC"); 
+
+        int catNum = rs.getInt("category_id");
+        return catNum;
+    }
+
+    public static int getnumOfPeople(Connection con) throws SQLException{ 
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * people ORDER BY person_id DESC");
+
+        int pplNum = rs.getInt("person_id");
+        return pplNum;
+    }
+
+    public static boolean[][] getPeople_categoriesTable(Connection con) throws SQLException{
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * people_categories");
+        ResultSetMetaData rsmd = rs.getMetaData();
+        int columnCount = rsmd.getColumnCount();
+
+        boolean[][] valueOfPersonInColumn = new boolean[numOfCategories][numOfPeople];
+
+        for (int i = 0; rs.next(); i++){
+            for (int j = 1; j <= columnCount; j++) {
+                valueOfPersonInColumn[j][i] =  rs.getBoolean(i);
+            }
+        }
+
+        return valueOfPersonInColumn;
+    }
+
+    public static String[] getCategoryName(Connection con) throws SQLException{
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * categories");
+        
+        String[] categoryName = new String[numOfCategories];
+
+        for (int i = 0; rs.next(); i++){  
+            categoryName[i] = rs.getString("category_name");
+        }
+
+        return categoryName;
+    }
+
+    public static String[] getCategoryQuestion(Connection con) throws SQLException{
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * categories");
+
+        String question[] = new String[numOfCategories];
+        
+        for (int i = 0; rs.next(); i++){  
+            question[i] = rs.getString("category_question");
+        }
+
+        return question;
+    }
+
+    public static String[] getpersonName(Connection con) throws SQLException{
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * people");
+
+        String name[] = new String[numOfPeople];
+        
+        for (int i = 0; rs.next(); i++){ 
+            name[i] = rs.getString("name");
+        }
+
+        return name;
     }
 
 }
