@@ -1,0 +1,49 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "GeneralNameInserter",
+            "request": "launch",
+            "mainClass": "GeneralNameInserter",
+            "projectName": "30Qs_56a1a639"
+        },
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "InsertIntoPeopleCategories",
+            "request": "launch",
+            "mainClass": "InsertIntoPeopleCategories",
+            "projectName": "30Qs_56a1a639"
+        },
+        {
+            "type": "java",
+            "name": "PeopleCategoriesInsertDemo",
+            "request": "launch",
+            "mainClass": "PeopleCategoriesInsertDemo",
+            "projectName": "30Qs_56a1a639"
+        },
+        {
+            "type": "java",
+            "name": "basicSession",
+            "request": "launch",
+            "mainClass": "basicSession",
+            "projectName": "30Qs_56a1a639"
+        },
+        {
+            "type": "java",
+            "name": "sessionOp1",
+            "request": "launch",
+            "mainClass": "sessionOp1",
+            "projectName": "30Qs_56a1a639"
+        }
+    ]
+}

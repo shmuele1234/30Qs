@@ -179,7 +179,7 @@ public class basicSession {
 
     public static int getNumOfCategories(Connection con) throws SQLException{
         Statement stmt = con.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * categories ORDER BY category_id DESC"); 
+        ResultSet rs = stmt.executeQuery("SELECT * FROM categories ORDER BY category_id DESC"); 
 
         int catNum = rs.getInt("category_id");
         return catNum;
@@ -187,7 +187,7 @@ public class basicSession {
 
     public static int getnumOfPeople(Connection con) throws SQLException{ 
         Statement stmt = con.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * people ORDER BY person_id DESC");
+        ResultSet rs = stmt.executeQuery("SELECT * FROM people ORDER BY person_id DESC");
 
         int pplNum = rs.getInt("person_id");
         return pplNum;
@@ -195,7 +195,7 @@ public class basicSession {
 
     public static boolean[][] getPeople_categoriesTable(Connection con) throws SQLException{
         Statement stmt = con.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * people_categories");
+        ResultSet rs = stmt.executeQuery("SELECT * FROM people_categories");
         ResultSetMetaData rsmd = rs.getMetaData();
         int columnCount = rsmd.getColumnCount();
 
@@ -212,7 +212,7 @@ public class basicSession {
 
     public static String[] getCategoryName(Connection con) throws SQLException{
         Statement stmt = con.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * categories");
+        ResultSet rs = stmt.executeQuery("SELECT * FROM categories");
         
         String[] categoryName = new String[numOfCategories];
 
@@ -225,7 +225,7 @@ public class basicSession {
 
     public static String[] getCategoryQuestion(Connection con) throws SQLException{
         Statement stmt = con.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * categories");
+        ResultSet rs = stmt.executeQuery("SELECT * FROM categories");
 
         String question[] = new String[numOfCategories];
         
@@ -238,7 +238,7 @@ public class basicSession {
 
     public static String[] getpersonName(Connection con) throws SQLException{
         Statement stmt = con.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * people");
+        ResultSet rs = stmt.executeQuery("SELECT * FROM people");
 
         String name[] = new String[numOfPeople];
         
