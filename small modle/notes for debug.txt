@@ -1,0 +1,11 @@
+change InsertPeopleCategories input to have in separate rows the name and each category, with an empty row in between the diferent people. do this to all the diferent inserting classes.
+
+there is a prolem with the time zone and the connection with the database (warning only should be okey).
+
+connecthion established using a driver referenced in referenced libraries (http://www.java2s.com/example/jar/m/download-mysqlconnectorjava8011jar-file.html).
+
+need to write a file describing how the code works. 
+
+farther commenting on the code needed including explentions of the diferent methods, and mentioning that the value of the id in the code startes from 0, and not from 1 as in the database.
+
+ask eli winberg to revue the code in order to be able to get more help. 

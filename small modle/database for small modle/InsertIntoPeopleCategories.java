@@ -8,27 +8,31 @@ public class InsertIntoPeopleCategories {
         
         // create a scanner object to read user input
         Scanner scanner = new Scanner(System.in);
-        
-        // get user input
-        System.out.println("Enter the data you want to insert, in the following order: \n   person_name, than enter a list of categories with value true, separated by spaces. \n   insert each person in a separate line.");
-
+       
         String output = "";
 
         while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
-            if (line.isEmpty()) {
+            System.out.println("Enter the person_name");
+
+            String name = scanner.nextLine();
+            if (name.isEmpty()) {
                 break;
             } 
-            output += insertLine(line, con);
+            System.out.println("enter a list of categories with value true, separated by spaces. ");
+
+            String categories = scanner.nextLine();
+            if (categories.isEmpty()) {
+                break;
+            } 
+            output += insertLine(name, categories, con);
         }
         
         System.out.println(output);
     }
 
-    public static String insertLine(String line, Connection con) throws SQLException{
-        List<String> categories = Arrays.asList(line.split("\\s+"));
+    public static String insertLine(String name, String cat ,Connection con) throws SQLException{
 
-        int person_id =  1; getPersonId(con, categories);
+        int person_id = getPersonId(con, cat);
 
         if (person_id == -1){
             return "";
@@ -49,16 +53,18 @@ public class InsertIntoPeopleCategories {
        return insertStatement;
     }
 
-    public static int getPersonId(Connection con, List<String> person_name) throws SQLException{ 
+    public static int getPersonId(Connection con, String person_name) throws SQLException{ 
         Statement stmt = con.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * FROM people WHERE person_name = " + "'" + person_name + "'");
+        ResultSet rs = stmt.executeQuery("SELECT * FROM people WHERE name = " + "'" + person_name + "'");
+
+        rs.next();
+        int person_id = rs.getInt("person_id");
 
         if (rs.next()){
             System.out.println("more than one person named: " + person_name);
             return -1;
         }
 
-        int person_id = rs.getInt("person_id");
         return person_id;
     }
 }

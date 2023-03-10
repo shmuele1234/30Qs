@@ -5,8 +5,8 @@ public class DatabaseConnection {
   
   public DatabaseConnection() {
     try {
-      Class.forName("com.mysql.jdbc.Driver");
-      con = DriverManager.getConnection("jdbc:mysql://localhost:3306/30Qs_db", "root", "48xZjVxzsdvAzAVP");
+      Class.forName("com.mysql.cj.jdbc.Driver");
+      con = DriverManager.getConnection("jdbc:mysql://localhost:3306/30Qs_db?serverTimezone=UTC", "root", "48xZjVxzsdvAzAVP");
     } catch (Exception e) {
       e.printStackTrace();
     }

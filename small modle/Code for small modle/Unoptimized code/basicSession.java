@@ -25,7 +25,7 @@ public class basicSession {
         String[] personName = new String[numOfPeople]; //this connects to people table in the database
         personName = getpersonName(con);
         //the index of all these arrays, is the id of the person or category accordingly 
-        dbCon.closeConnection();
+        //dbCon.closeConnection();
 
         while (numOfActivePeople>1) {//argument that means that only one person remains 
             printCurrentStatus(people_categoriesTable, categoryName, personName, numOfActivePeople, askedQuestions, numOfAskedQuestions); //for debug. no use in code
@@ -181,7 +181,9 @@ public class basicSession {
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT * FROM categories ORDER BY category_id DESC"); 
 
+        rs.next();
         int catNum = rs.getInt("category_id");
+        
         return catNum;
     }
 
@@ -189,6 +191,7 @@ public class basicSession {
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT * FROM people ORDER BY person_id DESC");
 
+        rs.next();
         int pplNum = rs.getInt("person_id");
         return pplNum;
     }
@@ -230,7 +233,7 @@ public class basicSession {
         String question[] = new String[numOfCategories];
         
         for (int i = 0; rs.next(); i++){  
-            question[i] = rs.getString("category_question");
+            question[i] = rs.getString("question");
         }
 
         return question;
