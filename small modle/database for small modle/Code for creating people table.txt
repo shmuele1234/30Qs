@@ -1,10 +1,10 @@
 CREATE TABLE people (
       person_id INTEGER AUTO_INCREMENT PRIMARY KEY ,
-      name VARCHAR(50) NOT NULL
+      person_name VARCHAR(50) NOT NULL
       );
       
 
-INSERT INTO people (name) VALUES 
+INSERT INTO people (person_name) VALUES 
 ('Genghis Khan'),
 ('Leonardo da Vinci'),
 ('Joseph Stalin'),

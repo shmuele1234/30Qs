@@ -8,14 +8,15 @@ public class GeneralNameInserter {
 
         String table = scanner.nextLine();
         
-        // get user input
-        System.out.print("Enter the names separated by spaces no spaces in names allowed: ");
-        String categoriesInput = scanner.nextLine();
+        String[] names = new String[1500];
+        int i = 0;
+        System.out.println("Enter the names in separate rows: ");
 
-        List<String> names = Arrays.asList(categoriesInput.split("\\s+"));
-
-        for (String name: names){
-            System.out.println("\nINSERT INTO " + table + "('" + name + "');");
+        for (; scanner.hasNextLine(); i++){
+            names[i] = scanner.nextLine();
+        }
+        for (int j = 0; j<i; j++){
+            System.out.println("INSERT INTO " + table + "('" + names[j] + "');");
         }
     }
 }

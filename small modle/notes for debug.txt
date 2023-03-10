@@ -1,5 +1,3 @@
-change InsertPeopleCategories input to have in separate rows the name and each category, with an empty row in between the diferent people. do this to all the diferent inserting classes.
-
 there is a prolem with the time zone and the connection with the database (warning only should be okey).
 
 connecthion established using a driver referenced in referenced libraries (http://www.java2s.com/example/jar/m/download-mysqlconnectorjava8011jar-file.html).

@@ -246,7 +246,7 @@ public class basicSession {
         String name[] = new String[numOfPeople];
         
         for (int i = 0; rs.next(); i++){ 
-            name[i] = rs.getString("name");
+            name[i] = rs.getString("person_name");
         }
 
         return name;

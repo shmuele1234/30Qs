@@ -8,7 +8,7 @@ CREATE TABLE people_categories (
     philosopher BOOLEAN,
     writer BOOLEAN,
     physicist BOOLEAN,
-    century_19 BOOLEAN,
+    19th_cent BOOLEAN,
     atheism BOOLEAN,
     judaism BOOLEAN,
     asia BOOLEAN,

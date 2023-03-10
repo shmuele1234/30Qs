@@ -11,39 +11,41 @@ public class InsertIntoPeopleCategories {
        
         String output = "";
 
+        int emptyLineCount = 0;
+
+        System.out.println("Enter person name and than enter in separate lines the categories, separate the people using an empty line: ");
+
         while (scanner.hasNextLine()) {
-            System.out.println("Enter the person_name");
-
             String name = scanner.nextLine();
-            if (name.isEmpty()) {
-                break;
-            } 
-            System.out.println("enter a list of categories with value true, separated by spaces. ");
+            String[] cats = new String[1000];
+            int i = 0;
+            for (;; i++){
+                if (!scanner.hasNextLine())
+                    break;
+                cats[i] = scanner.nextLine();
 
-            String categories = scanner.nextLine();
-            if (categories.isEmpty()) {
-                break;
-            } 
-            output += insertLine(name, categories, con);
+                if (cats[i].equals(""))
+                    break;
+            }
+            output += insertLine(name, cats, i, con);
         }
-        
         System.out.println(output);
     }
 
-    public static String insertLine(String name, String cat ,Connection con) throws SQLException{
+    public static String insertLine(String name, String[] cats,int numcats, Connection con) throws SQLException{
 
-        int person_id = getPersonId(con, cat);
+        int person_id = getPersonId(con, name);
 
         if (person_id == -1){
             return "";
         }
         
         // create SQL INSERT statement
-        String insertStatement = "INSERT INTO people_categories (person_name";
-        String values = "VALUES (" + person_id + ", '" + categories.get(0) + "'"; //adds to values the id and the name
+        String insertStatement = "INSERT INTO people_categories (person_id, person_name";
+        String values = "VALUES (" + person_id + ", '" + name + "'"; //adds to values the id and the name
         
-        for (int i = 1; i<categories.size(); i++) { //starts from first category skiping name
-            insertStatement += ", " + categories.get(i);
+        for (int i = 0; i<numcats; i++) { //starts from first category
+            insertStatement += ", " + cats[i];
             values += ", true";
         }
         
@@ -55,9 +57,12 @@ public class InsertIntoPeopleCategories {
 
     public static int getPersonId(Connection con, String person_name) throws SQLException{ 
         Statement stmt = con.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * FROM people WHERE name = " + "'" + person_name + "'");
+        ResultSet rs = stmt.executeQuery("SELECT * FROM people WHERE person_name = " + "'" + person_name + "'");
 
-        rs.next();
+        if (!rs.next()){
+            System.out.println("no person named: " + person_name);
+            return -1;
+        }    
         int person_id = rs.getInt("person_id");
 
         if (rs.next()){
