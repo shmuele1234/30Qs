@@ -4,6 +4,17 @@ connecthion established using a driver referenced in referenced libraries (http:
 
 need to write a file describing how the code works. 
 
-farther commenting on the code needed including explentions of the diferent methods, and mentioning that the value of the id in the code startes from 0, and not from 1 as in the database.
+farther commenting on the code needed including explentions of the diferent methods.
+
+problem with the findbest() or findClosesdTo50() methods (or both), 
+	asks if the person is a monarch (even though europe is better):
+		if answer yes, asks if is from europe (best question):
+			if answer yes, returns Alexander the Great (correct).
+			if answer no, asks if from europe again.
+		if answer no, asks if from Asia(even though politician, philosopher, writer, physicist, 19th_cent, atheism, judaism, europe are better, philosopher is best (or perhaps Europe)):
+			if answer yes, returns Joseph Stalin (correct).
+			is answer no,  asks if from Asia again.
+
+problem with the updateData() method returns negetive numOfActivePeople after second (last) question.  
 
 ask eli winberg to revue the code in order to be able to get more help. 
