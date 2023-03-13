@@ -6,7 +6,8 @@ public class basicSession {
     private static int numOfCategories; //the total number of categories
     private static int numOfPeople; //the total number of people
     private static int numOfActivePeople; //number of people that have not been ruled out yet
-    //private static int[] askedQuestions; // an array contaning the ids of all the asked questions 
+    private static List<Integer> askedQuestions = new ArrayList<>(); // an array contaning the ids of all the asked questions 
+    private static int[] activePeople; //the total of active people in a category; the index is the category_id
     private static int numOfAskedQuestions = 0;
 
     public static void main(String[] args) throws Exception{
@@ -14,7 +15,6 @@ public class basicSession {
         Connection con = dbCon.getConnection();
 
         numOfCategories = getNumOfCategories(con);
-        //askedQuestions = new int[numOfCategories];
         numOfPeople = getnumOfPeople(con);
         numOfActivePeople = numOfPeople;
 
@@ -26,6 +26,7 @@ public class basicSession {
         categoryQuestion = getCategoryQuestion(con);
         String[] personName = new String[numOfPeople]; //this connects to people table in the database
         personName = getpersonName(con);
+        activePeople = new int[numOfCategories];
         //the index of all these arrays, is the id of the person or category -1 (because we are counting from 0) accordingly 
         //dbCon.closeConnection();
         while (numOfActivePeople>1) {//argument that means that only one person remains 
@@ -83,25 +84,31 @@ public class basicSession {
         }
     }
 
-    public static int findBest(boolean[][] personStatusOnCategory){ //first box indicates the category_id and the second box indicates the person_id
-        int[] total = new int[numOfCategories]; //the total of active people in a category; the index is the category_id
+    public static int findBest(boolean[][] personStatusOnCategory) throws Exception{ //first box indicates the category_id and the second box indicates the person_id
 
-        for (int i = 0; i<total.length; i++) {//i indexes the category_id
-            total[i] = 0;
+        for (int i = 0; i<activePeople.length; i++) {//i indexes the category_id
+            activePeople[i] = 0;
 
             for (int j = 0; j<personStatusOnCategory[i].length; j++){ //j indexes the person_id
                 if (personStatusOnCategory[i][j])
-                    total[i]++; //adds one to the numbering of the total of people that are in category of index i
+                    activePeople[i]++; //adds one to the numbering of the total of people that are in category of index i
                 }
         }
-
-        return findClosesdTo50(total); //returns the id of the chosen category
+        System.out.println(Arrays.toString(activePeople));
+        int best = findClosesdTo50(); //returns the id of the chosen category
+        return best;
     }
 
-    public static int findClosesdTo50(int[] total){
+    public static int findClosesdTo50() throws Exception{
+        int[] total = new int[activePeople.length];
         for (int i = 0; i<total.length; i++){
-            total[i] = Math.abs(numOfPeople/2 - total[i]); //measures the displasment of the category from the ideal one for querying (witch is to include 50% of the people)
+            total[i] = activePeople[i];
         }
+        
+        for (int i = 0; i<total.length; i++){
+            total[i] = Math.abs(numOfActivePeople/2 - total[i]); //measures the displasment of the category from the ideal one for querying (witch is to include 50% of the people)
+        }
+        System.out.println("activPeople: " + Arrays.toString(activePeople));
         /*
         Arrays.sort(total); //arranges the categories in order from most to least efctive for querying
        
@@ -124,31 +131,37 @@ public class basicSession {
         
         int minId = 0;
         for (int i = 0; i < total.length; i++) { 
-            if (Math.abs(total.length/2 - total[i]) < min) { 
+            if (total[i] < min) { 
                 min = total[i];
-                minId = i;
+                if (!askedQuestions.contains(i)){
+                    minId = i;
+                } else if (minId == 0) throw new Exception("no question found");  
             }
         }
 
+        askedQuestions.add(minId);
         return minId;
     }
 
     public static void updateData(boolean userAnswerIsPositive, boolean[][] people_categoriesTable, int idOfBestQuestion) {
+        System.out.println("total: " + Arrays.toString(activePeople));
+        System.out.println("idOfBestQuestion: " + idOfBestQuestion);
+        System.out.println("total[idOfBestQuestion] " + activePeople[idOfBestQuestion]);
         if (userAnswerIsPositive){ //if user's answer is positive, set to false all categories of the people not associated with the asked question's category
+            numOfActivePeople = activePeople[idOfBestQuestion];
             for (int j = 0; j<people_categoriesTable[idOfBestQuestion].length; j++){
-                if (!people_categoriesTable[idOfBestQuestion][j]){
-                    numOfActivePeople--; //decrement numOfPeople since this person is no longer relevent for us 
+                if (!people_categoriesTable[idOfBestQuestion][j] ){
 
                     for (int i = 0; i<people_categoriesTable.length; i++)
-                    people_categoriesTable[i][j] = false;
+                        people_categoriesTable[i][j] = false;
                 }
             }
         }
 
         else{ //if user's answer is negetive, set to false all categories of the people associated with the asked question's category
+            numOfActivePeople -= activePeople[idOfBestQuestion];
             for (int j = 0; j<people_categoriesTable[idOfBestQuestion].length; j++){
                 if (people_categoriesTable[idOfBestQuestion][j]){
-                    numOfActivePeople--; //decrement numOfPeople since this person is no longer relevent for us 
 
                     for (int i = 0; i<people_categoriesTable.length; i++)
                         people_categoriesTable[i][j] = false;
@@ -160,15 +173,15 @@ public class basicSession {
     public static void printCurrentStatus(boolean[][] people_categoriesTable, String[] categoryName, String[] personName,
                                           int numOfActivePeople, int numOfAskedQuestions) { //prints all variables for debug
         
-        System.out.print("\n              ");
+        System.out.print("\n\t");
         for(int i = 0; i<categoryName.length; i++){
-            System.out.print(categoryName[i] + " ");
+            System.out.print(categoryName[i] + "\t");
         }
         
         for (int j = 0; j<people_categoriesTable[0].length; j++){
-            System.out.print("\n" + personName[j] + "  ");
+            System.out.print("\n" + personName[j] + "\t");
             for (int i = 0; i<people_categoriesTable.length; i++){
-                System.out.print(people_categoriesTable[i][j] + "      ");
+                System.out.print(people_categoriesTable[i][j] + "\t");
             }
         }
 
