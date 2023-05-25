@@ -13,7 +13,7 @@ public class InsertIDsIntoQuery {
             ID[i] = scanner.nextLine();
         }
         for (int j = 0; j<i; j++){
-            System.out.println("?item wdt:" + ID[j] + " ?value" + j +" .");
+            System.out.println("wd:" + ID[j].substring(31) + " ");
         }
     }
 }
